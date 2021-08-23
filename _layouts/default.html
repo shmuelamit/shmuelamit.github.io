@@ -1,0 +1,105 @@
+{% if page.url == "/" or page.url == "/404.html" %}
+{% assign is_home = true %}
+{% else %}
+{% assign is_home = false %}
+{% endif %}
+<!DOCTYPE html>
+<html
+  lang="{{ page.lang | default: site.lang | default: "en" }}"
+  class="dark-gray">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ "/static/app.css" | relative_url }}">
+    <link rel="shortcut icon" href="{{ "/favicon.ico" | relative_url }}" />
+    <title> {{ site.title }} </title>
+  </head>
+  <body>
+    <main class="measure-wide center ph3 pt5 pb6" dir="rtl">
+      {% if is_home %}
+      <h1 class="mt0 mb4">
+      {% else %}
+      <h2 class="mt0 mb5">
+      {% endif %}
+        <a
+          href="{{ "/" | relative_url }}"
+          class="no-underline bg-{{ site.brand_color }}">
+          {{site.title}}
+        </a>
+      {% if is_home %}
+      </h1>
+      {% else %}
+      </h2>
+      {% endif %}
+      {% if is_home %}
+        <section class="pv2">
+          {{ content }}
+        </section>
+      {% else %}
+        <section class="pv2">
+          <div class="navi">
+            {% if page.previous.url %}
+              <a href="{{page.previous.url}}">&laquo; {{page.previous.title}}</a>
+            {% endif %}
+            {% if page.next.url %}
+              <a href="{{page.next.url}}" style="float: left;">{{page.next.title}} &raquo;</a><br />
+            {% endif %}
+          </div>
+          
+          <h1 class="mt0 mb1">{{page.title}}</h1>
+          {% if page.date %}
+            <p class="silver mt0">
+              <time datetime="{{ page.date | date_to_xmlschema }}">
+                {{page.date | date: site.date_format }}
+              </time>
+            </p>
+          {% endif %}
+          {{content}}
+        </section>
+      {% endif %}
+      {% if site.posts.size > 0 %}
+        <hr />
+        <section class="pv2">
+          <ul class="list pl0">
+          {% for post in site.posts %}
+            <li class="mt0 mb4 {% if forloop.index0 >= site.num_posts_visible_initially %}dn js-hidden{% endif %}">
+              <span class="silver db mb1">{{ post.date | date: site.date_format }}</span>
+              <h3 class="ma0">
+                <a class=" no-underline" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+              </h3>
+            </li>
+          {% endfor %}
+          <li class="mt0 mb4">
+            <h4 class="ma0">
+              <a class="bg-{{ site.brand_color }} ba ph3 pv2 mb2 dib white no-underline js-more" href="#">
+                View More
+              </a>
+            </h4>
+          </li>
+          </ul>
+        </section>
+      {% endif %}
+    </main>
+    <script>
+      var moreLink = document.querySelector('.js-more')
+      if (moreLink) {
+        document.querySelector('.js-more').addEventListener('click', function (e) {
+          e.preventDefault()
+          e.currentTarget.blur()
+          
+          var posts = document.querySelectorAll('.js-hidden')
+          for(var i = 0; i < Math.min({{ site.num_posts_visible_initially }}, posts.length); i++) {
+            posts[i].classList.remove('dn')
+            posts[i].classList.remove('js-hidden')
+          }
+
+          if(document.querySelectorAll('.js-hidden').length == 0) {
+            e.target.classList.add('dn')
+            e.target.classList.remove('dib')
+          }
+        })
+      }
+    </script>
+  </body>
+</html>
