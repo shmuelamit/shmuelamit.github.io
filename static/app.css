@@ -166,6 +166,7 @@ figcaption {
   max-width: 100% !important;
 }
 
+.highlight,
 .highlighter-rouge {
     overflow-x: auto;
     direction: ltr;
@@ -178,4 +179,10 @@ figcaption {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
